@@ -18,6 +18,6 @@ setTimeout(foo.bar, 500); // "hello, foo"
 
 ## How it Works
 
-Using `@bound` on an instance method will override the PropertyDescriptor of that method with a getter, that injects a bound version of the method into the instance object on the first invocation. Subsequent calls will use the method on the instance object, effectively hiding the original unbound method on the prototype object. The side-effect of this is that modifications to the prototype method will not take effect.
+Using `@bound` on an instance method will override the PropertyDescriptor of that method with a getter, that injects a bound version of the method into the instance object on the first invocation. Subsequent calls will use the method on the instance object, effectively hiding the original unbound method on the prototype object. The side-effect of this is that modifications to the prototype method will have no effect.
 
 Using `@bound` on a static method will simply override it with a bound version on the constructor function itself.
