@@ -3,36 +3,29 @@
  * @param target The target class or prototype; used by the TypeScript compiler (omit function call brackets to use as a decorator).
  * @param propKey The property key of the target method; used by the TypeScript compiler (omit function call brackets to use as a decorator).
  */
-export function bound(target: Object, propKey: string | symbol)
-{
+export function bound(target: Object, propKey: string | symbol) {
     var originalMethod = target[propKey] as Function;
 
     // Ensure the above type-assertion is valid at runtime.
     if (typeof originalMethod !== "function") throw new TypeError("@bound can only be used on methods.");
 
-    if (typeof target === "function")
-    {
+    if (typeof target === "function") {
         // Static method, bind to class (if target is of type "function", the method decorator was used on a static method).
         return {
-            value: function ()
-            {
+            value: function () {
                 return originalMethod.apply(target, arguments);
             }
         };
-    }
-    else if (typeof target === "object")
-    {
+    } else if (typeof target === "object") {
         // Instance method, bind to instance on first invocation (as that is the only way to access an instance from a decorator).
         return {
-            get: function ()
-            {
+            get: function () {
                 // Create bound override on object instance. This will hide the original method on the prototype, and instead yield a bound version from the
                 // instance itself. The original method will no longer be accessible. Inside a getter, 'this' will refer to the instance.
                 var instance = this;
 
                 Object.defineProperty(instance, propKey.toString(), {
-                    value: function ()
-                    {
+                    value: function () {
                         // This is effectively a lightweight bind() that skips many (here unnecessary) checks found in native implementations.
                         return originalMethod.apply(instance, arguments);
                     }
